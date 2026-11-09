@@ -1,0 +1,24 @@
+SAC Avenida — atualização de cadastro e histórico de clientes
+
+Arquivos:
+- index.html: página principal atualizada.
+- script.js: lógica atualizada.
+- style-extra.css: estilos adicionais e regras de impressão.
+
+Instalação:
+1. Faça uma cópia de segurança dos arquivos atuais.
+2. Substitua o HTML pelo index.html deste pacote (ou aplique as alterações no seu HTML atual).
+3. Substitua o script.js pelo arquivo deste pacote.
+4. Coloque style-extra.css na mesma pasta do style.css atual. O index.html já carrega os dois arquivos.
+5. Mantenha seu style.css original, pois ele não foi enviado nesta conversa.
+
+Novidades:
+- Aba Clientes com cadastro, edição e busca.
+- Protocolos passam a ser vinculados ao cadastro do cliente automaticamente.
+- Migração automática dos protocolos já existentes: cria cadastros para clientes antigos e vincula os registros.
+- Histórico do cliente reúne protocolos e atualizações.
+- Impressão do histórico individual.
+- Impressão do Dashboard com gráficos, indicadores e atendimentos recentes.
+
+Observação importante sobre armazenamento:
+O sistema continua usando IndexedDB local quando CONFIG.API_BASE está vazio. Isso significa que os dados ficam no navegador/dispositivo atual. Para que João e Lavínia visualizem o mesmo cadastro em computadores diferentes, será necessário configurar uma API e implementar também os endpoints /clientes, além dos endpoints de protocolos e histórico.

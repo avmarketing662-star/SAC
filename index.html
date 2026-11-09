@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="theme-color" content="#063B7A">
+  <title>SAC | Supermercado Avenida</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+  <link rel="stylesheet" href="style.css">\n  <link rel="stylesheet" href="style-extra.css">
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.4/dist/chart.umd.min.js"></script>
+</head>
+<body>
+  <div class="app-shell">
+    <aside class="sidebar" id="sidebar">
+      <div class="brand">
+        <div class="brand-logo" title="Espaço para o logotipo"><span>AV</span></div>
+        <div><strong>SUPERMERCADO</strong><b>AVENIDA</b><small>Sistema de Atendimento</small></div>
+      </div>
+      <div class="sidebar-label">MENU PRINCIPAL</div>
+      <nav class="navigation">
+        <button class="nav-link active" data-page="dashboard"><i class="fa-solid fa-chart-pie"></i> Dashboard</button>
+        <button class="nav-link" data-page="protocolos"><i class="fa-solid fa-folder-open"></i> Protocolos <span class="nav-count" id="navTotal">0</span></button>
+        <button class="nav-link" data-page="clientes"><i class="fa-solid fa-users"></i> Clientes <span class="nav-count" id="navClients">0</span></button>
+        <button class="nav-link" data-page="novo"><i class="fa-solid fa-circle-plus"></i> Novo atendimento</button>
+        <button class="nav-link" data-page="relatorios"><i class="fa-solid fa-chart-column"></i> Relatórios</button>
+      </nav>
+      <div class="sidebar-bottom">
+        <div class="sidebar-help"><i class="fa-solid fa-circle-info"></i><div><b>SAC Avenida</b><small>Central de atendimento interno</small></div></div>
+        <small class="version">Sistema SAC • v1.0</small>
+      </div>
+    </aside>
+
+    <main class="main-content">
+      <header class="topbar">
+        <button class="icon-button mobile-menu" id="menuToggle" aria-label="Abrir menu"><i class="fa-solid fa-bars"></i></button>
+        <div class="breadcrumb"><span>Supermercado Avenida</span><i class="fa-solid fa-chevron-right"></i><strong id="pageCrumb">Dashboard</strong></div>
+        <div class="topbar-right"><span class="today" id="todayLabel"></span><div class="avatar">SA</div></div>
+      </header>
+
+      <section class="page active" id="page-dashboard">
+        <div class="page-heading">
+          <div><span class="eyebrow">VISÃO GERAL</span><h1>Dashboard</h1><p>Acompanhe os atendimentos e indicadores do SAC.</p></div>
+          <div class="heading-actions">
+            <button class="btn btn-outline" id="printDashboard"><i class="fa-solid fa-print"></i> Imprimir dashboard</button>
+            <button class="btn btn-primary" data-go="novo"><i class="fa-solid fa-plus"></i> Novo protocolo</button>
+          </div>
+
+        </div>
+        <div class="stats-grid">
+          <article class="stat-card"><div class="stat-icon blue"><i class="fa-solid fa-folder"></i></div><div><span>Total de protocolos</span><strong id="statTotal">0</strong><small>Registros cadastrados</small></div></article>
+          <article class="stat-card"><div class="stat-icon orange"><i class="fa-solid fa-clock"></i></div><div><span>Em aberto</span><strong id="statOpen">0</strong><small>Aguardando atendimento</small></div></article>
+          <article class="stat-card"><div class="stat-icon purple"><i class="fa-solid fa-headset"></i></div><div><span>Em atendimento</span><strong id="statProgress">0</strong><small>Em acompanhamento</small></div></article>
+          <article class="stat-card"><div class="stat-icon green"><i class="fa-solid fa-circle-check"></i></div><div><span>Resolvidos</span><strong id="statResolved">0</strong><small>Atendimentos concluídos</small></div></article>
+          <article class="stat-card"><div class="stat-icon gray"><i class="fa-solid fa-ban"></i></div><div><span>Cancelados</span><strong id="statCanceled">0</strong><small>Protocolos cancelados</small></div></article>
+          <article class="stat-card"><div class="stat-icon teal"><i class="fa-solid fa-stopwatch"></i></div><div><span>Tempo médio</span><strong id="statAverage">—</strong><small>Até a resolução</small></div></article>
+        </div>
+        <div class="metric-strip"><div><span>Percentual de resolução</span><strong id="resolutionRate">0%</strong></div><div class="progress-track"><span id="resolutionBar"></span></div><small>Resolvidos em relação ao total de protocolos</small></div>
+        <div class="charts-grid">
+          <article class="panel chart-panel"><div class="panel-heading"><div><h3>Protocolos por status</h3><p>Distribuição atual dos atendimentos</p></div></div><div class="chart-wrap"><canvas id="statusChart"></canvas></div></article>
+          <article class="panel chart-panel"><div class="panel-heading"><div><h3>Protocolos por unidade</h3><p>Volume por cidade/unidade</p></div></div><div class="chart-wrap"><canvas id="unitChart"></canvas></div></article>
+          <article class="panel chart-panel"><div class="panel-heading"><div><h3>Manifestações por categoria</h3><p>Principais assuntos registrados</p></div></div><div class="chart-wrap"><canvas id="categoryChart"></canvas></div></article>
+          <article class="panel chart-panel"><div class="panel-heading"><div><h3>Evolução mensal</h3><p>Protocolos abertos nos últimos meses</p></div></div><div class="chart-wrap"><canvas id="monthlyChart"></canvas></div></article>
+        </div>
+        <article class="panel recent-panel"><div class="panel-heading"><div><h3>Atendimentos recentes</h3><p>Últimos protocolos registrados</p></div><button class="btn btn-light btn-sm" data-go="protocolos">Ver todos <i class="fa-solid fa-arrow-right"></i></button></div><div class="table-wrap"><table><thead><tr><th>PROTOCOLO</th><th>CLIENTE</th><th>UNIDADE</th><th>CATEGORIA</th><th>STATUS</th><th></th></tr></thead><tbody id="recentTable"></tbody></table></div></article>
+      </section>
+
+      <section class="page" id="page-protocolos">
+        <div class="page-heading"><div><span class="eyebrow">ATENDIMENTO</span><h1>Protocolos</h1><p>Consulte, filtre e gerencie todos os atendimentos.</p></div><button class="btn btn-primary" data-go="novo"><i class="fa-solid fa-plus"></i> Novo protocolo</button></div>
+        <article class="panel filters-panel">
+          <div class="search-box"><i class="fa-solid fa-magnifying-glass"></i><input id="searchProtocol" placeholder="Buscar por protocolo ou nome do cliente..."></div>
+          <div class="filters-grid">
+            <select id="filterCity"><option value="">Todas as cidades</option></select>
+            <select id="filterUnit"><option value="">Todas as unidades</option></select>
+            <select id="filterAgent"><option value="">Todos os atendentes</option></select>
+            <select id="filterStatus"><option value="">Todos os status</option><option>Aberto</option><option>Em Atendimento</option><option>Resolvido</option><option>Cancelado</option></select>
+            <select id="filterCategory"><option value="">Todas as categorias</option></select>
+            <input type="date" id="filterStart" aria-label="Data inicial"><input type="date" id="filterEnd" aria-label="Data final">
+            <select id="sortProtocols"><option value="newest">Mais recentes</option><option value="oldest">Mais antigos</option><option value="name">Nome do cliente (A–Z)</option><option value="status">Status</option></select>
+            <button class="btn btn-light" id="clearFilters"><i class="fa-solid fa-rotate-left"></i> Limpar</button>
+          </div>
+        </article>
+        <article class="panel"><div class="panel-heading"><div><h3>Lista de protocolos</h3><p id="protocolCount">0 registros encontrados</p></div><button class="btn btn-outline btn-sm" id="exportFiltered"><i class="fa-solid fa-file-csv"></i> Exportar CSV</button></div><div class="table-wrap"><table><thead><tr><th>PROTOCOLO</th><th>ABERTURA</th><th>CLIENTE</th><th>UNIDADE</th><th>CATEGORIA</th><th>ATENDENTE</th><th>STATUS</th><th>AÇÕES</th></tr></thead><tbody id="protocolTable"></tbody></table></div><div class="empty-state hidden" id="emptyProtocols"><i class="fa-regular fa-folder-open"></i><b>Nenhum protocolo encontrado</b><span>Ajuste os filtros ou cadastre um novo atendimento.</span></div></article>
+      </section>
+
+      <section class="page" id="page-clientes">
+        <div class="page-heading">
+          <div><span class="eyebrow">BASE DE RELACIONAMENTO</span><h1>Clientes</h1><p>Cadastre clientes e consulte todo o histórico de atendimentos.</p></div>
+          <button class="btn btn-primary" id="newClientBtn"><i class="fa-solid fa-user-plus"></i> Cadastrar cliente</button>
+        </div>
+        <article class="panel filters-panel">
+          <div class="search-box"><i class="fa-solid fa-magnifying-glass"></i><input id="searchClient" placeholder="Buscar por nome, telefone ou cidade..."></div>
+        </article>
+        <article class="panel">
+          <div class="panel-heading"><div><h3>Clientes cadastrados</h3><p id="clientCount">0 clientes</p></div></div>
+          <div class="table-wrap"><table><thead><tr><th>CLIENTE</th><th>TELEFONE</th><th>CIDADE</th><th>ATENDIMENTOS</th><th>ÚLTIMO CONTATO</th><th>AÇÕES</th></tr></thead><tbody id="clientTable"></tbody></table></div>
+          <div class="empty-state hidden" id="emptyClients"><i class="fa-solid fa-users"></i><b>Nenhum cliente encontrado</b><span>Cadastre um cliente ou ajuste a busca.</span></div>
+        </article>
+        <article class="panel client-form-panel hidden" id="clientFormPanel">
+          <div class="panel-heading"><div><h3 id="clientFormTitle">Cadastrar cliente</h3><p>Os dados serão usados para vincular os próximos atendimentos.</p></div></div>
+          <form id="clientForm">
+            <input type="hidden" id="clientEditingId">
+            <div class="form-grid">
+              <label class="span-2">Nome completo <em>*</em><input id="registeredClientName" required maxlength="120" placeholder="Nome completo do cliente"></label>
+              <label>Telefone / WhatsApp<input id="registeredClientPhone" inputmode="tel" maxlength="20" placeholder="(00) 00000-0000"></label>
+              <label>Cidade <em>*</em><select id="registeredClientCity" required><option value="">Selecione</option></select></label>
+              <label>Unidade de referência<select id="registeredClientUnit"><option value="">Selecione a cidade primeiro</option></select></label>
+              <label class="span-2">Observações<textarea id="registeredClientNotes" rows="3" maxlength="2000" placeholder="Informações adicionais (opcional)"></textarea></label>
+            </div>
+            <div class="form-footer"><span><em>*</em> Campos obrigatórios</span><div><button type="button" class="btn btn-light" id="cancelClientForm">Cancelar</button><button type="submit" class="btn btn-primary"><i class="fa-solid fa-floppy-disk"></i> Salvar cliente</button></div></div>
+          </form>
+        </article>
+      </section>
+
+      <section class="page" id="page-novo">
+        <div class="page-heading"><div><span class="eyebrow">REGISTRO DE ATENDIMENTO</span><h1 id="formTitle">Novo protocolo</h1><p>Preencha os dados para registrar a manifestação do cliente.</p></div><button class="btn btn-light" data-go="protocolos"><i class="fa-solid fa-arrow-left"></i> Voltar</button></div>
+        <form id="protocolForm" class="panel form-panel">
+          <input type="hidden" id="editingId">
+          <div class="form-section-title"><span>01</span><div><h3>Dados do protocolo</h3><p>Informações de identificação do atendimento.</p></div></div>
+          <div class="form-grid">
+            <label>Número do protocolo<input id="protocolNumber" readonly placeholder="Gerado automaticamente"></label>
+            <label>Data e horário<input id="protocolDate" readonly></label>
+            <label class="span-2">Nome do cliente <em>*</em><input id="clientName" required maxlength="120" placeholder="Nome completo"></label>
+            <label>Telefone / WhatsApp<input id="clientPhone" inputmode="tel" maxlength="20" placeholder="(00) 00000-0000"></label>
+            <label>Cidade <em>*</em><select id="city" required><option value="">Selecione</option></select></label>
+            <label>Unidade <em>*</em><select id="unit" required><option value="">Selecione a cidade primeiro</option></select></label>
+            <label>Canal de atendimento <em>*</em><select id="channel" required><option value="">Selecione</option><option>WhatsApp</option><option>Instagram</option><option>Facebook</option><option>Presencial</option></select></label>
+            <label>Tipo de manifestação <em>*</em><select id="manifestation" required><option value="">Selecione</option><option>Reclamação</option><option>Sugestão</option><option>Elogio</option><option>Solicitação</option></select></label>
+            <label>Categoria <em>*</em><select id="category" required><option value="">Selecione</option></select></label>
+            <label>Atendente responsável <em>*</em><select id="agent" required><option value="">Selecione</option></select></label>
+            <label>Status inicial <em>*</em><select id="status" required><option>Aberto</option><option>Em Atendimento</option><option>Resolvido</option><option>Cancelado</option></select></label>
+            <label class="span-2">Descrição detalhada <em>*</em><textarea id="description" required rows="5" maxlength="5000" placeholder="Descreva a manifestação do cliente com o máximo de detalhes possível..."></textarea></label>
+          </div>
+          <div class="form-footer"><span><em>*</em> Campos obrigatórios</span><div><button type="button" class="btn btn-light" id="cancelForm">Cancelar</button><button type="submit" class="btn btn-primary"><i class="fa-solid fa-floppy-disk"></i> Salvar protocolo</button></div></div>
+        </form>
+      </section>
+
+      <section class="page" id="page-relatorios">
+        <div class="page-heading"><div><span class="eyebrow">ANÁLISE E DESEMPENHO</span><h1>Relatórios</h1><p>Gere relatórios gerenciais dos atendimentos do SAC.</p></div><button class="btn btn-primary" id="printReport"><i class="fa-solid fa-print"></i> Imprimir / PDF</button></div>
+        <article class="panel report-filters"><div class="panel-heading"><div><h3>Parâmetros do relatório</h3><p>Selecione o período e o tipo de análise.</p></div></div><div class="report-filter-grid"><label>Relatório<select id="reportType"><option value="geral">Relatório geral</option><option value="unidade">Por unidade</option><option value="atendente">Por atendente</option><option value="categoria">Por categoria</option><option value="reclamacoes">Somente reclamações</option><option value="pendentes">Resolvidos e pendentes</option></select></label><label>Data inicial<input type="date" id="reportStart"></label><label>Data final<input type="date" id="reportEnd"></label><button class="btn btn-primary" id="generateReport"><i class="fa-solid fa-filter"></i> Gerar relatório</button><button class="btn btn-outline" id="exportReport"><i class="fa-solid fa-file-csv"></i> Exportar Excel / CSV</button></div></article>
+        <div class="report-summary" id="reportSummary"></div>
+        <article class="panel"><div class="panel-heading"><div><h3 id="reportTitle">Relatório geral de protocolos</h3><p id="reportSubtitle">Todos os registros do período selecionado.</p></div></div><div class="table-wrap"><table id="reportTable"><thead><tr><th>PROTOCOLO</th><th>DATA</th><th>CLIENTE</th><th>UNIDADE</th><th>TIPO</th><th>CATEGORIA</th><th>ATENDENTE</th><th>STATUS</th></tr></thead><tbody id="reportTableBody"></tbody></table></div></article>
+      </section>
+      <footer class="footer">© <span id="yearNow"></span> Supermercado Avenida • Sistema de Atendimento ao Cliente</footer>
+    </main>
+  </div>
+
+  <div class="modal-backdrop hidden" id="detailModal"><div class="modal modal-large"><div class="modal-header"><div><span class="eyebrow">DETALHES DO ATENDIMENTO</span><h2 id="detailTitle">Protocolo</h2></div><button class="icon-button" data-close="detailModal"><i class="fa-solid fa-xmark"></i></button></div><div class="modal-content" id="detailContent"></div></div></div>
+  <div class="modal-backdrop hidden" id="historyModal"><div class="modal modal-large"><div class="modal-header"><div><span class="eyebrow">ACOMPANHAMENTO</span><h2 id="historyTitle">Histórico do protocolo</h2></div><button class="icon-button" data-close="historyModal"><i class="fa-solid fa-xmark"></i></button></div><div class="modal-content"><div id="timeline" class="timeline"></div><form id="historyForm" class="history-form"><h3>Adicionar atualização</h3><input type="hidden" id="historyProtocolId"><div class="form-grid"><label>Atendente responsável<select id="historyAgent" required></select></label><label>Alteração de status<select id="historyStatus"><option value="">Manter status atual</option><option>Aberto</option><option>Em Atendimento</option><option>Resolvido</option><option>Cancelado</option></select></label><label class="span-2">Descrição da atualização <em>*</em><textarea id="historyDescription" rows="3" required placeholder="Descreva o contato, providência ou retorno..."></textarea></label><label class="span-2">Observações internas<textarea id="historyNotes" rows="2" placeholder="Informações internas (opcional)"></textarea></label></div><div class="form-footer"><span>O registro será adicionado ao histórico.</span><button class="btn btn-primary" type="submit"><i class="fa-solid fa-plus"></i> Adicionar atualização</button></div></form></div></div></div>
+  <div class="modal-backdrop hidden" id="clientHistoryModal">
+    <div class="modal modal-large">
+      <div class="modal-header">
+        <div><span class="eyebrow">RELACIONAMENTO COM O CLIENTE</span><h2 id="clientHistoryTitle">Histórico do cliente</h2></div>
+        <div class="modal-header-actions">
+          <button class="btn btn-outline btn-sm" id="printClientHistory"><i class="fa-solid fa-print"></i> Imprimir histórico</button>
+          <button class="icon-button" data-close="clientHistoryModal"><i class="fa-solid fa-xmark"></i></button>
+        </div>
+      </div>
+      <div class="modal-content" id="clientHistoryContent"></div>
+    </div>
+  </div>
+  <div class="toast-container" id="toastContainer"></div>
+  <script src="script.js"></script>
+</body>
+</html>
