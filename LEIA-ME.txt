@@ -1,0 +1,26 @@
+INTEGRACAO DE CLIENTES SALVOS — SAC SUPERMERCADO AVENIDA
+
+ARQUIVO
+- sac-clientes.js: complemento que adiciona a seleção de clientes cadastrados.
+
+INSTALACAO
+1. Extraia o ZIP na pasta do seu sistema SAC.
+2. Abra o arquivo HTML principal.
+3. Localize, no final do HTML, esta linha:
+   <script src="script.js"></script>
+4. Imediatamente ABAIXO dela, adicione:
+   <script src="sac-clientes.js"></script>
+5. Salve o HTML e atualize a página com Ctrl + F5.
+
+COMO FUNCIONA
+- Lê os clientes da chave localStorage "avenida_sac_clientes_v1".
+- Adiciona o campo "Cliente já cadastrado" no formulário de novo protocolo.
+- Ao selecionar um cliente, preenche nome, telefone, cidade e unidade.
+- Permite continuar digitando manualmente quando não selecionar ninguém.
+- Atualiza a lista após salvar um cliente ou protocolo.
+- Não apaga nem migra os dados existentes.
+
+IMPORTANTE
+Os dados continuam armazenados no navegador e na origem (endereço) em que o sistema é aberto.
+Se você abrir o SAC em outro navegador ou computador, o localStorage desse outro ambiente
+não terá automaticamente os mesmos clientes.
