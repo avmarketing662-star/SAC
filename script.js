@@ -12,11 +12,7 @@
     "Extrema": ["Extrema - Centro"],
     "Cambuí": ["Cambuí - Centro"]
   };
-  const CATEGORIES = [
-    "Atendimento", "Açougue", "Padaria", "Hortifruti", "Mercearia",
-    "Bebidas", "Limpeza", "Higiene e Perfumaria", "Caixa",
-    "Preços e Ofertas", "Produtos", "Estrutura da loja", "Clube Avenida", "Outros"
-  ];
+const CATEGORIES = ["Atendimento","Açougue","Padaria","Hortifruti","Mercearia","Bebidas","Congelados e Resfriados","Laticínios","Frios e Embutidos","Limpeza","Higiene e Perfumaria","Utilidades Domésticas","Bazar","Caixa","Frente de Caixa","Preços e Ofertas","Produtos","Estoque","Recebimento de Mercadorias","Reposição","Compras","Prevenção de Perdas","Quebras e Avarias","Validade dos Produtos","Organização e Limpeza","Estrutura da Loja","Equipamentos","Manutenção","Refrigeração","Iluminação","Estacionamento","Segurança","Funcionários","Recursos Humanos","Uniformes e EPIs","Gestão e Administração","Clube Avenida","Marketing e Comunicação","Sistema e Tecnologia","Delivery e Entregas","Fornecedores","Fiscal e Financeiro","Sugestões de Melhorias","Reclamações","Elogios","Outros"];
   const AGENTS = ["João F", "Lalínia", "Luiz"];
   const STATUSES = ["Aberto", "Em Atendimento", "Resolvido", "Cancelado"];
 
